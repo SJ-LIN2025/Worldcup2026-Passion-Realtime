@@ -59,16 +59,21 @@ body {
 }
 
 .logo {
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
   display: grid;
   place-items: center;
-  font-weight: 800;
-  letter-spacing: 0.6px;
-  background: radial-gradient(90px 90px at 30% 30%, rgba(124, 92, 255, 1), rgba(43, 28, 120, 1));
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.officialLogo img {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
 }
 
 .title {
@@ -370,11 +375,17 @@ body {
 .bracketViewport {
   width: 100%;
   overflow: auto;
+  cursor: grab;
+  user-select: none;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   background: radial-gradient(900px 420px at 50% 22%, rgba(124, 92, 255, 0.16), transparent 70%),
     rgba(5, 8, 25, 0.45);
   padding: 18px;
+}
+
+.bracketViewport.dragging {
+  cursor: grabbing;
 }
 
 .bracketCanvas {
@@ -383,7 +394,7 @@ body {
   display: grid;
   grid-template-columns: 1.42fr 1.08fr 0.98fr 0.9fr 1.05fr 0.9fr 0.98fr 1.08fr 1.42fr;
   gap: 10px;
-  transform-origin: top center;
+  transform-origin: top left;
   transition: transform 0.18s ease, width 0.18s ease;
 }
 

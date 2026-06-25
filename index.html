@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>2026 世界杯淘汰赛（公开源实时）</title>
+    <title>Worldcup2026 Passion Realtime</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -13,10 +13,11 @@
     <div class="bg"></div>
     <header class="topbar">
       <div class="brand">
-        <div class="logo">WC26</div>
+        <div class="logo officialLogo" aria-label="2026 世界杯官方图标">
+          <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Fifa_World_Cup_2026.svg" alt="2026 世界杯官方图标" />
+        </div>
         <div class="title">
-          <div class="h1">32 强淘汰赛对阵图 & 小组第三排名</div>
-          <div class="sub">优先抓取 FIFA 官方赛程页，积分榜使用 ESPN 公开 standings API，Wikipedia 作为免登录备用源。</div>
+          <div class="h1">2026 世界杯 32 强淘汰赛对阵图 & 小组第三排名</div>
         </div>
       </div>
 
@@ -34,7 +35,6 @@
       <section class="card">
         <div class="cardHead">
           <div class="cardTitle">小组第三排名（自动计算）</div>
-          <div class="cardHint">按：积分 → 净胜球 → 进球（若文本可解析到）；缺失字段会被排到后面。</div>
         </div>
         <div class="tableWrap">
           <table class="tbl">
@@ -58,7 +58,6 @@
         <div class="cardHead bracketHead">
           <div>
             <div class="cardTitle">32 强淘汰赛对阵（实时赛程填充）</div>
-            <div class="cardHint">根据当前小组排名、最佳第三名规则和 ESPN/FIFA 赛程信息，自动填充已确定的晋级国家、比赛时间与场馆。</div>
           </div>
           <div class="zoomControls">
             <button class="btn small" id="zoomOutBtn">缩小</button>
@@ -67,25 +66,9 @@
           </div>
         </div>
 
-        <div class="bracketViewport">
+        <div class="bracketViewport" id="bracketViewport">
           <div class="bracketCanvas" id="bracketCanvas"></div>
         </div>
-      </section>
-
-      <section class="card">
-        <div class="cardHead">
-          <div class="cardTitle">数据来源（免登录公开网页）</div>
-          <div class="cardHint">展示本次刷新访问到的 FIFA / Wikipedia / ESPN 等公开来源（可点击打开）。</div>
-        </div>
-        <div class="sourceList" id="sources"></div>
-      </section>
-
-      <section class="card">
-        <div class="cardHead">
-          <div class="cardTitle">系统提示</div>
-          <div class="cardHint">点击“立即刷新”会触发后端重新抓取免登录公开源；后台也会定时自动刷新。</div>
-        </div>
-        <ul class="issues" id="issues"></ul>
       </section>
     </main>
 

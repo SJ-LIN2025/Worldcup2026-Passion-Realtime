@@ -1,4 +1,9 @@
 let bracketZoom = 1;
+let isBracketDragging = false;
+let dragStartX = 0;
+let dragStartY = 0;
+let dragScrollLeft = 0;
+let dragScrollTop = 0;
 const API_BASE = "https://3vqhuzow.cn-east-fn.bytedance.net";
 
 function fmtTime(ms) {
@@ -193,45 +198,46 @@ function applyZoom() {
 }
 
 function setZoom(next) {
-  bracketZoom = Math.min(1.8, Math.max(0.55, next));
+  bracketZoom = Math.min(2.2, Math.max(0.45, next));
   applyZoom();
 }
 
-function renderSources(state) {
-  const list = document.getElementById("sources");
-  const sources = state.sources || [];
+function setupBracketGestures() {
+  const viewport = document.getElementById("bracketViewport");
+  if (!viewport) return;
 
-  if (!sources.length) {
-    list.innerHTML = `<div class="empty">暂无来源：请点击“立即刷新”抓取 FIFA / ESPN / Wikipedia 等免登录公开源</div>`;
-    return;
-  }
+  viewport.addEventListener("wheel", (ev) => {
+    ev.preventDefault();
+    const step = ev.deltaY > 0 ? -0.08 : 0.08;
+    setZoom(bracketZoom + step);
+  }, { passive: false });
 
-  list.innerHTML = sources
-    .map((s) => {
-      return `
-        <a class="source" href="${esc(s.url)}" target="_blank" rel="noreferrer">
-          <div class="st">${esc(s.title || "(无标题)")}</div>
-          <div class="sa">${esc(s.author || "")}</div>
-        </a>
-      `;
-    })
-    .join("");
-}
+  viewport.addEventListener("mousedown", (ev) => {
+    isBracketDragging = true;
+    dragStartX = ev.clientX;
+    dragStartY = ev.clientY;
+    dragScrollLeft = viewport.scrollLeft;
+    dragScrollTop = viewport.scrollTop;
+    viewport.classList.add("dragging");
+  });
 
-function renderIssues(state) {
-  const ul = document.getElementById("issues");
-  const issues = state.issues || [];
-  ul.innerHTML = issues.length
-    ? issues.map((i) => `<li>${esc(i)}</li>`).join("")
-    : `<li>暂无</li>`;
+  window.addEventListener("mousemove", (ev) => {
+    if (!isBracketDragging) return;
+    ev.preventDefault();
+    viewport.scrollLeft = dragScrollLeft - (ev.clientX - dragStartX);
+    viewport.scrollTop = dragScrollTop - (ev.clientY - dragStartY);
+  });
+
+  window.addEventListener("mouseup", () => {
+    isBracketDragging = false;
+    viewport.classList.remove("dragging");
+  });
 }
 
 function renderAll(state) {
   document.getElementById("updatedAt").textContent = `更新：${fmtTime(state.updatedAt)}`;
   renderThird(state);
   renderR32(state);
-  renderSources(state);
-  renderIssues(state);
 
   if (document.getElementById("autoScroll").checked) {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -270,6 +276,7 @@ function initSSE() {
   document.getElementById("zoomOutBtn").addEventListener("click", () => setZoom(bracketZoom - 0.1));
   document.getElementById("zoomInBtn").addEventListener("click", () => setZoom(bracketZoom + 0.1));
   document.getElementById("zoomResetBtn").addEventListener("click", () => setZoom(1));
+  setupBracketGestures();
 
   try {
     const res = await fetch(`${API_BASE}/api/state`);
