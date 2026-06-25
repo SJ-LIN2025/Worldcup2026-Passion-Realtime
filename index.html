@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2026 世界杯淘汰赛（公开源实时）</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="static/styles.css" />
+  </head>
+  <body>
+    <div class="bg"></div>
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">WC26</div>
+        <div class="title">
+          <div class="h1">32 强淘汰赛对阵图 & 小组第三排名</div>
+          <div class="sub">优先抓取 FIFA 官方赛程页，积分榜使用 ESPN 公开 standings API，Wikipedia 作为免登录备用源。</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <div class="pill" id="updatedAt">未更新</div>
+        <button class="btn" id="refreshBtn">立即刷新</button>
+        <label class="toggle">
+          <input type="checkbox" id="autoScroll" checked />
+          <span>自动滚动到最新</span>
+        </label>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="card">
+        <div class="cardHead">
+          <div class="cardTitle">小组第三排名（自动计算）</div>
+          <div class="cardHint">按：积分 → 净胜球 → 进球（若文本可解析到）；缺失字段会被排到后面。</div>
+        </div>
+        <div class="tableWrap">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>排名</th>
+                <th>小组</th>
+                <th>球队</th>
+                <th>积分</th>
+                <th>净胜球</th>
+                <th>进球</th>
+                <th>是否晋级</th>
+              </tr>
+            </thead>
+            <tbody id="thirdTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card bracketCard">
+        <div class="cardHead bracketHead">
+          <div>
+            <div class="cardTitle">32 强淘汰赛对阵（实时赛程填充）</div>
+            <div class="cardHint">根据当前小组排名、最佳第三名规则和 ESPN/FIFA 赛程信息，自动填充已确定的晋级国家、比赛时间与场馆。</div>
+          </div>
+          <div class="zoomControls">
+            <button class="btn small" id="zoomOutBtn">缩小</button>
+            <button class="btn small" id="zoomResetBtn">100%</button>
+            <button class="btn small" id="zoomInBtn">放大</button>
+          </div>
+        </div>
+
+        <div class="bracketViewport">
+          <div class="bracketCanvas" id="bracketCanvas"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="cardHead">
+          <div class="cardTitle">数据来源（免登录公开网页）</div>
+          <div class="cardHint">展示本次刷新访问到的 FIFA / Wikipedia / ESPN 等公开来源（可点击打开）。</div>
+        </div>
+        <div class="sourceList" id="sources"></div>
+      </section>
+
+      <section class="card">
+        <div class="cardHead">
+          <div class="cardTitle">系统提示</div>
+          <div class="cardHint">点击“立即刷新”会触发后端重新抓取免登录公开源；后台也会定时自动刷新。</div>
+        </div>
+        <ul class="issues" id="issues"></ul>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div>Tip：2026 世界杯尚未开赛时，公开源通常只提供赛程/规则，球队名会以 A1/A2/3? 等占位显示；小组赛产生积分后会自动更新。</div>
+    </footer>
+
+    <script src="static/app.js"></script>
+  </body>
+</html>
