@@ -347,6 +347,13 @@ body {
   padding: 0 18px 22px;
   color: rgba(255, 255, 255, 0.66);
   font-size: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.visitStats {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 11px;
 }
 
 .bracketCard {

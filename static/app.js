@@ -244,6 +244,19 @@ function renderAll(state) {
   }
 }
 
+async function logVisit() {
+  try {
+    const res = await fetch(`${API_BASE}/api/visit`, { method: "POST" });
+    const data = await res.json();
+    const el = document.getElementById("visitStats");
+    if (el && data.total) {
+      el.textContent = `访问量：总计 ${data.total} · 今日 ${data.today}`;
+    }
+  } catch {
+    // ignore
+  }
+}
+
 async function refresh() {
   const res = await fetch(`${API_BASE}/api/refresh`, { method: "POST" });
   const data = await res.json();
@@ -286,4 +299,5 @@ function initSSE() {
   }
 
   initSSE();
+  logVisit();
 })();
