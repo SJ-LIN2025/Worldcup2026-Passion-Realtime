@@ -4,7 +4,7 @@ let dragStartX = 0;
 let dragStartY = 0;
 let dragScrollLeft = 0;
 let dragScrollTop = 0;
-const API_BASE = "https://3vqhuzow.cn-east-fn.bytedance.net";
+const STATE_URL = "data/state_snapshot.json";
 
 function fmtTime(ms) {
   if (!ms) return "未更新";
@@ -244,44 +244,19 @@ function renderAll(state) {
   }
 }
 
-async function logVisit() {
-  try {
-    const res = await fetch(`${API_BASE}/api/visit`, { method: "POST" });
-    const data = await res.json();
-    const el = document.getElementById("visitStats");
-    if (el && data.total) {
-      el.textContent = `访问量：总计 ${data.total} · 今日 ${data.today}`;
-    }
-  } catch {
-    // ignore
+async function loadSnapshot() {
+  const res = await fetch(`${STATE_URL}?t=${Date.now()}`);
+  const data = await res.json();
+  renderAll(data);
+
+  const el = document.getElementById("visitStats");
+  if (el) {
+    el.textContent = "静态版本：已关闭后端接口服务";
   }
 }
 
 async function refresh() {
-  const res = await fetch(`${API_BASE}/api/refresh`, { method: "POST" });
-  const data = await res.json();
-  renderAll(data);
-}
-
-function initSSE() {
-  const es = new EventSource(`${API_BASE}/api/events`);
-  es.onmessage = (ev) => {
-    try {
-      renderAll(JSON.parse(ev.data));
-    } catch {
-      // ignore
-    }
-  };
-  es.onerror = () => {
-    setTimeout(async () => {
-      try {
-        const res = await fetch(`${API_BASE}/api/state`);
-        renderAll(await res.json());
-      } catch {
-        // ignore
-      }
-    }, 2000);
-  };
+  await loadSnapshot();
 }
 
 (async function main() {
@@ -292,12 +267,8 @@ function initSSE() {
   setupBracketGestures();
 
   try {
-    const res = await fetch(`${API_BASE}/api/state`);
-    renderAll(await res.json());
+    await loadSnapshot();
   } catch {
     // ignore
   }
-
-  initSSE();
-  logVisit();
 })();
